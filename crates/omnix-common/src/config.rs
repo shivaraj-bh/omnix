@@ -24,6 +24,17 @@ pub struct OmConfig {
 }
 
 impl OmConfig {
+    /// Read the om configuration from given yaml path
+    pub fn from_yaml(yaml_path: &str, flake_url: &FlakeUrl) -> Result<Self, OmConfigError> {
+        let yaml_str = std::fs::read_to_string(yaml_path)?;
+        let config: OmConfigTree = serde_yaml::from_str(&yaml_str)?;
+        Ok(OmConfig {
+            flake_url: flake_url.without_attr(),
+            reference: flake_url.get_attr().as_list(),
+            config,
+        })
+    }
+
     /// Read the om configuration from given json path
     pub fn from_json(json_path: &str, flake_url: &FlakeUrl) -> Result<Self, OmConfigError> {
         let json_str = std::fs::read_to_string(json_path)?;
@@ -123,4 +134,8 @@ pub enum OmConfigError {
     /// Failed to parse json path
     #[error("Failed to parse json path: {0} ")]
     ParseJsonPath(#[from] std::io::Error),
+
+    /// Failed to parse yaml
+    #[error("Failed to parse yaml: {0}")]
+    ParseYaml(#[from] serde_yaml::Error),
 }

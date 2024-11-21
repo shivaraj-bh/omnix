@@ -27,6 +27,7 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 which = { workspace = true }
 serde_json = { workspace = true }
+serde_yaml = "0.9"
 
 [dev-dependencies]
 divan = "0.1.15"

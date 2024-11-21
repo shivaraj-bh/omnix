@@ -27,3 +27,11 @@ fn from_flake_url() {
         black_box(om_config);
     });
 }
+
+#[divan::bench]
+fn from_yaml() {
+    let yaml_path = "../../om.yaml";
+    let flake_url = FlakeUrl::from_str("../../.").unwrap();
+
+    black_box(OmConfig::from_yaml(yaml_path, &flake_url).unwrap());
+}
