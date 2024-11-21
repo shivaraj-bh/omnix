@@ -24,6 +24,17 @@ pub struct OmConfig {
 }
 
 impl OmConfig {
+    /// Read the om configuration from given json path
+    pub fn from_json(json_path: &str, flake_url: &FlakeUrl) -> Result<Self, OmConfigError> {
+        let json_str = std::fs::read_to_string(json_path)?;
+        let config: OmConfigTree = serde_json::from_str(&json_str)?;
+        Ok(OmConfig {
+            flake_url: flake_url.without_attr(),
+            reference: flake_url.get_attr().as_list(),
+            config,
+        })
+    }
+
     /// Read the om configuration from the flake url
     pub async fn from_flake_url(cmd: &NixCmd, flake_url: &FlakeUrl) -> Result<Self, OmConfigError> {
         Ok(OmConfig {
@@ -108,4 +119,8 @@ pub enum OmConfigError {
     /// Failed to parse JSON
     #[error("Failed to decode (json error): {0}")]
     DecodeErrorJson(#[from] serde_json::Error),
+
+    /// Failed to parse json path
+    #[error("Failed to parse json path: {0} ")]
+    ParseJsonPath(#[from] std::io::Error),
 }
