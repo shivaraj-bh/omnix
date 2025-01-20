@@ -57,6 +57,8 @@ impl Checkable for Rosetta {
 /// Return [AppleEmulation]. Return None if not an ARM mac.
 
 fn get_apple_emulation(system: &OS) -> Option<AppleEmulation> {
+    println!("Detecting apple emulation");
+    println!("{}", MacOSArch::Arm64(apple_emulation));
     match system {
         OS::MacOS {
             nix_darwin: _,
