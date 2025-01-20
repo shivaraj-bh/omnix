@@ -32,7 +32,9 @@ impl Checkable for Rosetta {
         _: Option<&nix_rs::flake::url::FlakeUrl>,
     ) -> Vec<(&'static str, Check)> {
         let mut checks = vec![];
+        println!("Going to run rosetta");
         if let (true, Some(emulation)) = (self.enable, get_apple_emulation(&nix_info.nix_env.os)) {
+            println!("Inside loop Going to run rosetta");
             let check = Check {
                 title: "Rosetta Not Active".to_string(),
                 info: format!("apple emulation = {:?}", emulation),
