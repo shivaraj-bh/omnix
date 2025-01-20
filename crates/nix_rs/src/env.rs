@@ -121,11 +121,33 @@ pub enum AppleEmulation {
     /// Running under Rosetta
     Rosetta,
 }
+pub fn is_proc_translated() -> bool {
+    use std::ffi::CStr;
+
+    let mut value: libc::c_int = 0;
+    let mut value_size = std::mem::size_of_val(&value);
+
+    let sysctl_name = CStr::from_bytes_with_nul(b"sysctl.proc_translated\0").unwrap();
+
+    let err = unsafe {
+        libc::sysctlbyname(
+            sysctl_name.as_ptr(),
+            &mut value as *mut _ as *mut _,
+            &mut value_size,
+            std::ptr::null_mut(),
+            0,
+        )
+    };
+
+    println!("{}", value);
+
+    err == 0 && value != 0
+}
 
 impl AppleEmulation {
     /// Detect Apple emulation mode for current process
     pub fn new() -> Self {
-        use is_proc_translated::is_proc_translated;
+        // use is_proc_translated::is_proc_translated;
         if is_proc_translated() {
             AppleEmulation::Rosetta
         } else {

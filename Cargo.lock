@@ -1659,6 +1659,7 @@ dependencies = [
  "colored",
  "is_proc_translated",
  "lazy_static",
+ "libc",
  "nonempty",
  "os_info",
  "regex",
